@@ -12,14 +12,17 @@ public class ServicioAutenticacionImpl implements ServicioAutenticacionInterface
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
                     Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
 
-            return baseDatos.getUsuarioData(nick) != null;
+            return baseDatos.verificarCredenciales(nick);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
     public boolean ingresar(String nick, String clave) throws RemoteException{
+
         return false;
     }
-    public void salir()throws RemoteException{}
+    public void salir()throws RemoteException{
+
+    }
 }

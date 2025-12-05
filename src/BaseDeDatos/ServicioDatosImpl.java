@@ -54,6 +54,13 @@ public class ServicioDatosImpl extends RemoteObject implements ServicioDatosInte
         return false;
     }
 
+    @Override
+    public boolean estaConectado (String nick) throws RemoteException{
+
+        // metodo pendinte de ejecutar para saber si esta online o no y implementar trinos pendientes y login y logout
+        return false;
+    }
+
     // ----------------------- Metodos Seguidores --------------------------------------
     @Override
     public List<String> getSeguidores(String nickSeguido) throws RemoteException {
