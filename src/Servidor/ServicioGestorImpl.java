@@ -17,7 +17,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
                     Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
 
-            return baseDatos.verificarCredenciales(nick);
+            return baseDatos.registrarUsuario(nombre,nick,clave);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -94,6 +94,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
                     Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
 
             baseDatos.crearTrino(trino, nickUsuario);
+            // agregar los trinos nuevos como pendientes si tiene seguidores que estan offline
         } catch (Exception e) {
             e.printStackTrace();
         }
