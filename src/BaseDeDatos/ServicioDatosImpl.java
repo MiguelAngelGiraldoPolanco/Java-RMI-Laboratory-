@@ -55,9 +55,16 @@ public class ServicioDatosImpl extends RemoteObject implements ServicioDatosInte
     }
 
     @Override
-    public boolean estaConectado (String nick) throws RemoteException{
-
-        // metodo pendinte de ejecutar para saber si esta online o no y implementar trinos pendientes y login y logout
+    public boolean onLine (String nick, boolean Online) throws RemoteException{
+        UsuarioData user = usuariosRegistrados.get(nick);
+        if (user != null) {
+            if (Online == user.isOnline()){
+                return false;
+            }else{
+                user.setOnline(Online);
+                return true;
+            }
+        }
         return false;
     }
 
@@ -120,6 +127,7 @@ public class ServicioDatosImpl extends RemoteObject implements ServicioDatosInte
         return Collections.emptyList();
     }
 
+    // Metodo para borrar un trino una vez se publica y revisa si este trino esta en lista de pendientes y lo borra tambien de ahi.
     @Override
     public boolean borrarTrinoTotal(Trino trino) throws RemoteException{
         String nickUsuario = trino.GetNickPropietario();

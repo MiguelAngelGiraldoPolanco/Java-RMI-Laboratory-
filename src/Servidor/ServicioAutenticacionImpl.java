@@ -3,26 +3,39 @@ package Servidor;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+
+import Common.clases.Trino;
 import Common.interfaces.*;
+import java.util.List;
 
 public class ServicioAutenticacionImpl implements ServicioAutenticacionInterface {
 
-    public boolean verificarExistencia (String nick) throws RemoteException {
+    public List<Trino> ingresar(String nick) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
                     Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
 
-            return baseDatos.verificarCredenciales(nick);
+            if ( baseDatos.verificarCredenciales(nick) ){
+                baseDatos.onLine(nick, true);
+                return baseDatos.getAndClearTrinosPendientes(nick);
+            }else{
+                return null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return null;
         }
     }
-    public boolean ingresar(String nick, String clave) throws RemoteException{
 
-        return false;
-    }
-    public void salir()throws RemoteException{
+    @Override
+    public void salir(String nick)throws RemoteException{
+        try {
+            ServicioDatosInterface baseDatos = (ServicioDatosInterface)
+                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
 
+            baseDatos.onLine(nick,false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
