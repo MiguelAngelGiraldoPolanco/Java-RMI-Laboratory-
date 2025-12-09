@@ -4,6 +4,7 @@ package Servidor;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.List;
 
 import Common.interfaces.*;
@@ -94,7 +95,29 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
                     Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
 
             baseDatos.crearTrino(trino, nickUsuario);
+            Trino trinito = new Trino(trino,nickUsuario);
             // agregar los trinos nuevos como pendientes si tiene seguidores que estan offline
+            List<String> seguidores = baseDatos.getSeguidores(nickUsuario);
+            // verificar si los seguidores estan online o offline
+            if (seguidores != null){
+                List<UsuarioData> usuarios = new ArrayList<>();
+                    seguidores.forEach( seguidor ->{
+                        try {
+                            usuarios.add(baseDatos.getUsuarioData(seguidor));
+                        } catch (RemoteException e) {
+                            System.out.println("no se pudo procesar y añadir usuario");
+                        }
+                    });
+                    usuarios.forEach(user ->{
+                        if (user.isOnline() == false){
+                            try {
+                                baseDatos.addTrinoPendiente(user.getNick(),trinito);
+                            } catch (RemoteException e) {
+                                System.out.println("no se pudo procesar y añadir trino");
+                            }
+                        }
+                    });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
