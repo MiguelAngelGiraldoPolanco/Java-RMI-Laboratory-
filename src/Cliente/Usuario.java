@@ -1,16 +1,38 @@
 package Cliente;
 //Miguel Angel Giraldo Polanco :: mgiraldopolanco@gmail.com
 
+import Common.interfaces.CallbackUsuarioInterface;
+
+import java.rmi.Naming;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.server.UnicastRemoteObject;
+
 public class Usuario {
     public static void main(String[] args) {
-        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
-        // to see how IntelliJ IDEA suggests fixing it.
-        System.out.printf("Hello and welcome!");
+        try{
+            CallbackUsuarioImpl cliente = new CallbackUsuarioImpl();
 
-        for (int i = 1; i <= 5; i++) {
-            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
-            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
-            System.out.println("i = " + i);
+            LocateRegistry.createRegistry(2003);
+
+            CallbackUsuarioInterface stubCliente = (CallbackUsuarioInterface)
+                    UnicastRemoteObject.exportObject(cliente, 0);
+
+            String URL_cliente = "rmi://localhost:2003/cliente/user1";
+
+            Naming.rebind(URL_cliente, stubCliente);
+
+            System.out.println("URL del Cliente corriendo en : "+URL_cliente);
+
+            System.out.println("Cliente en marcha... Pulsa ENTER para detener.");
+
+            System.in.read();
+
+            UnicastRemoteObject.unexportObject(cliente, true);
+
+            System.out.println("Cliente detenido.");
+
+        }catch (Exception e){
+            e.printStackTrace();
         }
     }
 }

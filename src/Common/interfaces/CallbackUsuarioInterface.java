@@ -1,5 +1,7 @@
 package Common.interfaces;
 //Miguel Angel Giraldo Polanco :: mgiraldopolanco@gmail.com
 
-public interface CallbackUsuarioInterface {
+import java.rmi.Remote;
+
+public interface CallbackUsuarioInterface extends Remote {
 }

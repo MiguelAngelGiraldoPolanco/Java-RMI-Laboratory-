@@ -1,5 +1,7 @@
 package Cliente;
 //Miguel Angel Giraldo Polanco :: mgiraldopolanco@gmail.com
 
-public class CallbackUsuarioImpl {
+import Common.interfaces.CallbackUsuarioInterface;
+
+public class CallbackUsuarioImpl implements CallbackUsuarioInterface {
 }
