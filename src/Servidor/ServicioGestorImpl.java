@@ -12,7 +12,7 @@ import Common.clases.*;
 
 public class ServicioGestorImpl implements ServicioGestorInterface {
    //Metodos de usuarios
-
+    @Override
     public boolean registrarUsuario(String nombre, String nick, String clave) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
@@ -24,7 +24,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
             return false;
         }
     }
-
+    @Override
     public UsuarioData getUsuarioData(String nick) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
@@ -36,7 +36,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
             return null;
         }
     }
-
+    @Override
     public boolean bloquearDesbloquearCuenta(String nick, boolean bloquear) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
@@ -48,9 +48,20 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
             return false;
         }
     }
+    @Override
+    public List<UsuarioData> getUsers() throws RemoteException {
+        try {
+            ServicioDatosInterface baseDatos = (ServicioDatosInterface)
+                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
 
+            return baseDatos.getUsers();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
     //Métodos de seguimiento
-
+    @Override
     public List<String> getSeguidores(String nickSeguido) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
@@ -62,7 +73,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
             return null;
         }
     }
-
+    @Override
     public boolean seguirUsuario(String nickSeguidor, String nickSeguido) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
@@ -74,7 +85,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
             return false;
         }
     }
-
+    @Override
     public boolean dejarDeSeguirUsuario(String nickSeguidor, String nickSeguido) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
@@ -88,7 +99,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
     }
 
     //Métodos de trinos
-
+    @Override
     public void crearTrino (String trino, String nickUsuario) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
@@ -122,7 +133,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
             e.printStackTrace();
         }
     }
-
+    @Override
     public List<Trino> getTrinos(String nicksUsuario) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
@@ -134,7 +145,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
             return null;
         }
     }
-
+    @Override
     public boolean borrarTrinoTotal(Trino trino) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)

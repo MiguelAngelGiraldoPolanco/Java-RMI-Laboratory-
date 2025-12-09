@@ -10,6 +10,7 @@ import java.util.List;
 
 public class ServicioAutenticacionImpl implements ServicioAutenticacionInterface {
 
+    @Override
     public List<Trino> ingresar(String nick) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)

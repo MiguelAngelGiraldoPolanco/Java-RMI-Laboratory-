@@ -67,6 +67,10 @@ public class ServicioDatosImpl extends RemoteObject implements ServicioDatosInte
         }
         return false;
     }
+    @Override
+    public List<UsuarioData> getUsers()throws RemoteException{
+        return new ArrayList<>(usuariosRegistrados.values());
+    }
 
     // ----------------------- Metodos Seguidores --------------------------------------
     @Override

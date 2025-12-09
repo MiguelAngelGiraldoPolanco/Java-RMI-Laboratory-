@@ -2,6 +2,7 @@ package Common.interfaces;
 //Miguel Angel Giraldo Polanco :: mgiraldopolanco@gmail.com
 
 import Common.clases.Trino;
+import Common.clases.UsuarioData;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
@@ -16,7 +17,7 @@ public interface CallbackUsuarioInterface extends Remote {
     // Metodos user
     boolean registrarUsuario(String nombre, String nick, String clave) throws RemoteException;
     boolean bloquearDesbloquearCuenta(String nick, boolean bloquear) throws RemoteException;
-
+    List<UsuarioData> getUsers() throws RemoteException;
     // Metodos Seguidores
     boolean seguirUsuario(String nickSeguidor, String nickSeguido) throws RemoteException;
     boolean dejarDeSeguirUsuario(String nickSeguidor, String nickSeguido) throws RemoteException;
