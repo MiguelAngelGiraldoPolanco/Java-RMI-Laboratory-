@@ -40,11 +40,20 @@ public class UsuarioUI{
     private void iniciarSesion() throws RemoteException {
         String nick = Buffer.readLine("Ingresa tu nick\n");
         var trinos = user.ingresar(nick);
-
+        int option = 0;
         if(trinos != null){
             System.out.println("Bienvenido " + nick + ". Trinos recientes:");
             for(var trino : trinos){
                 System.out.println(trino.GetNickPropietario() + " : "+ trino.GetTrino());
+            }
+            switch (option){
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                default: break;
             }
         } else {
             System.out.println("Error al iniciar sesión usuario incorrecto");
