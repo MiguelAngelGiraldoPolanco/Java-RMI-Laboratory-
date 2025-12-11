@@ -14,7 +14,7 @@ public class ServicioAutenticacionImpl implements ServicioAutenticacionInterface
     public List<Trino> ingresar(String nick) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             if ( baseDatos.verificarCredenciales(nick) ){
                 baseDatos.onLine(nick, true);
@@ -32,7 +32,7 @@ public class ServicioAutenticacionImpl implements ServicioAutenticacionInterface
     public void salir(String nick)throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             baseDatos.onLine(nick,false);
         } catch (Exception e) {

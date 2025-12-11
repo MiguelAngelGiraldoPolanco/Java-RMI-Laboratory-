@@ -16,7 +16,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
     public boolean registrarUsuario(String nombre, String nick, String clave) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             return baseDatos.registrarUsuario(nombre,nick,clave);
         } catch (Exception e) {
@@ -28,7 +28,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
     public UsuarioData getUsuarioData(String nick) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             return baseDatos.getUsuarioData(nick);
         } catch (Exception e) {
@@ -40,7 +40,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
     public boolean bloquearDesbloquearCuenta(String nick, boolean bloquear) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             return baseDatos.bloquearDesbloquearCuenta(nick, bloquear);
         } catch (Exception e) {
@@ -52,7 +52,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
     public List<UsuarioData> getUsers() throws RemoteException {
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             return baseDatos.getUsers();
         } catch (Exception e) {
@@ -65,7 +65,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
     public List<String> getSeguidores(String nickSeguido) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             return baseDatos.getSeguidores(nickSeguido);
         } catch (Exception e) {
@@ -77,7 +77,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
     public boolean seguirUsuario(String nickSeguidor, String nickSeguido) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             return baseDatos.seguirUsuario(nickSeguidor, nickSeguido);
         } catch (Exception e) {
@@ -89,7 +89,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
     public boolean dejarDeSeguirUsuario(String nickSeguidor, String nickSeguido) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             return baseDatos.dejarDeSeguirUsuario(nickSeguidor, nickSeguido);
         } catch (Exception e) {
@@ -103,7 +103,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
     public void crearTrino (String trino, String nickUsuario) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             baseDatos.crearTrino(trino, nickUsuario);
             Trino trinito = new Trino(trino,nickUsuario);
@@ -137,7 +137,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
     public List<Trino> getTrinos(String nicksUsuario) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             return baseDatos.getTrinos(nicksUsuario);
         } catch (Exception e) {
@@ -149,7 +149,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
     public boolean borrarTrinoTotal(Trino trino) throws RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/ServicioDatos/BD1");
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
             return baseDatos.borrarTrinoTotal(trino);
         } catch (Exception e) {

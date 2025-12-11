@@ -18,7 +18,7 @@ public class BaseDeDatos {
             LocateRegistry.createRegistry(2001);
 
             ServicioDatosInterface stub = (ServicioDatosInterface)
-                    UnicastRemoteObject.exportObject(servicioDatos, 2001);
+                    UnicastRemoteObject.exportObject(servicioDatos, 0);
 
             String URL_nombre = "rmi://localhost:2001/BaseDeDatos/BD1";
             Naming.rebind(URL_nombre, stub);
