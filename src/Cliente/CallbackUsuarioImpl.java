@@ -59,6 +59,17 @@ public class CallbackUsuarioImpl implements CallbackUsuarioInterface {
             return false;
         }
     }
+    @Override
+    public boolean isBlocked(String nick) throws RemoteException{
+        try {
+            ServicioGestorInterface servidor = (ServicioGestorInterface)
+                    Naming.lookup("rmi://localhost:2002/ServicioGestor/SER2");
+            return servidor.isBLocked(nick);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     // Metodos Seguidores
     @Override

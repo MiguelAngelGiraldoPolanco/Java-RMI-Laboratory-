@@ -18,6 +18,8 @@ public interface CallbackUsuarioInterface extends Remote {
     boolean registrarUsuario(String nombre, String nick, String clave) throws RemoteException;
     boolean bloquearDesbloquearCuenta(String nick, boolean bloquear) throws RemoteException;
     List<UsuarioData> getUsers() throws RemoteException;
+    boolean isBlocked(String nick) throws RemoteException;
+
     // Metodos Seguidores
     boolean seguirUsuario(String nickSeguidor, String nickSeguido) throws RemoteException;
     boolean dejarDeSeguirUsuario(String nickSeguidor, String nickSeguido) throws RemoteException;

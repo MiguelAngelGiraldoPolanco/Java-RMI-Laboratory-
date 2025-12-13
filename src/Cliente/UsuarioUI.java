@@ -64,7 +64,9 @@ public class UsuarioUI{
                         "1. Crear Trino\n" +
                                 "2. Seguir Usuario\n" +
                                 "3. Dejar De Seguir Usuario\n" +
-                                "4. Cerrar Secion\n"
+                                "4. Trinos De Los Usuarios Que Sigo\n" +
+                                "5. Configuracion de Cuenta\n" +
+                                "6. Cerrar Secion\n"
                 );
 
                 switch(option){
@@ -74,7 +76,11 @@ public class UsuarioUI{
                         break;
                     case 3: dejarSeguirUsuario();
                         break;
-                    case 4: salir();
+                    case 4: trinosUsuariosSeguidos();
+                        break;
+                    case 5: configuracion();
+                        break;
+                    case 6: salir();
                         break;
                     default: System.out.println("Opción inválida");
                 }
@@ -95,13 +101,9 @@ public class UsuarioUI{
         String usuario = Buffer.readLine("Escribe el nick del usuario que quieres seguir\n");
         if (usuarioActual.equals(usuario)){
             System.out.println("No puedes seguirte a ti mismo");
-            return;
-        }
-        List<UsuarioData>usuarios = user.getUsers();
-        boolean existe = usuarios.stream()
-                .anyMatch(u -> u.getNick().equals(usuario));
-        if(existe) {
-            user.seguirUsuario(usuarioActual, usuario);
+        } else if (user.isBlocked(usuario)) {
+            System.out.println("El usuario esta bloqueado no puedes seguirlo");
+        } else if( user.seguirUsuario(usuarioActual, usuario)) {
             System.out.println("Haz empezado a seguir a: "+ usuario);
         }else {
             System.out.println("El usuario que quieres seguir no existe");
@@ -123,6 +125,34 @@ public class UsuarioUI{
         }else {
             System.out.println("El usuario que quieres dejar de seguir no existe");
         }
+    }
+
+    private void trinosUsuariosSeguidos() throws RemoteException {
+        if (usersOnline.contains(usuarioActual)) {
+            user.salir(usuarioActual);
+            usersOnline.remove(usuarioActual);
+            usuarioActual = null;
+            System.out.println("Adios");
+            mostrarMenu();
+        }
+    }
+
+    private void configuracion() throws RemoteException {
+        int option;
+        do {
+            option = Buffer.readInt(
+                    "1. Bloquear Cuenta\n" +
+                            "2. Debloquear Cuenta\n"
+            );
+
+            switch(option){
+                case 1: user.bloquearDesbloquearCuenta(usuarioActual,true);
+                    break;
+                case 2: user.bloquearDesbloquearCuenta(usuarioActual,false);
+                    break;
+                default: System.out.println("Opción inválida");
+            }
+        } while(option != 0);
     }
 
     private void salir() throws RemoteException {

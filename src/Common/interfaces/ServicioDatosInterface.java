@@ -19,7 +19,6 @@ public interface ServicioDatosInterface extends Remote {
     boolean bloquearDesbloquearCuenta(String nick, boolean bloquear) throws RemoteException;
     boolean onLine (String nick, boolean Online) throws RemoteException;
     List<UsuarioData> getUsers()throws RemoteException;
-
     //Métodos de seguimiento
 
     List<String> getSeguidores(String nickSeguido) throws RemoteException;
