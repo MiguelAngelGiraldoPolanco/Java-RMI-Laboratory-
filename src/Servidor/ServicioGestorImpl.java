@@ -89,12 +89,12 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
         }
     }
     @Override
-    public boolean seguirUsuario(String nickSeguidor, String nickSeguido) throws RemoteException{
+    public boolean seguirUsuario(String nickSeguidor, String nickSeguido) throws RemoteException {
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
                     Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
             UsuarioData user = getUsuarioData(nickSeguido);
-            if (user != null){
+            if (user != null) {
                 return baseDatos.seguirUsuario(nickSeguidor, nickSeguido);
             }
             return false;
@@ -103,6 +103,7 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
             return false;
         }
     }
+
     @Override
     public boolean dejarDeSeguirUsuario(String nickSeguidor, String nickSeguido) throws RemoteException{
         try {

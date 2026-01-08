@@ -108,6 +108,15 @@ public class UsuarioUI{
         }else {
             System.out.println("El usuario que quieres seguir no existe");
         }
+        try {
+            if (user.seguirUsuario(usuarioActual, usuario)) {
+                System.out.println("Has empezado a seguir a: " + usuario);
+            } else {
+                System.out.println("Ya sigues a este usuario");
+            }
+        } catch (Exception e) {
+            System.out.println("No puedes seguirte a ti mismo");
+        }
     }
 
     private void dejarSeguirUsuario() throws RemoteException {

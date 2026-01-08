@@ -131,6 +131,17 @@ public class ServicioDatosImpl extends RemoteObject implements ServicioDatosInte
         return Collections.emptyList();
     }
 
+    public List<Trino> getTrinosResumen(){
+        List<Trino> resumen = new ArrayList<>();
+        for (List<Trino> listaPorUsuario : historialTrinos.values()) {
+            for (Trino t : listaPorUsuario) {
+                // Extraemos solo nick y timestamp
+                resumen.add(new Trino(t.GetNickPropietario(), String.valueOf(t.GetTimestamp())));
+            }
+        }
+        return resumen;
+    }
+
     // Metodo para borrar un trino una vez se publica y revisa si este trino esta en lista de pendientes y lo borra tambien de ahi.
     @Override
     public boolean borrarTrinoTotal(Trino trino) throws RemoteException{
