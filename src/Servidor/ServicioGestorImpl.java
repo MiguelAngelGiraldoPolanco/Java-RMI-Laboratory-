@@ -76,6 +76,17 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
             return false;
         }
     }
+    @Override
+    public boolean onLine (String nick, boolean line) throws RemoteException{
+        try {
+            ServicioDatosInterface baseDatos = (ServicioDatosInterface)
+                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
+            return baseDatos.onLine(nick,line);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
     //Métodos de seguimiento
     @Override
     public List<String> getSeguidores(String nickSeguido) throws RemoteException{

@@ -106,6 +106,18 @@ public class CallbackUsuarioImpl implements CallbackUsuarioInterface {
         }
     }
 
+    @Override
+    public UsuarioData getUser(String nick) throws RemoteException{
+        try {
+            ServicioGestorInterface servidor = (ServicioGestorInterface)
+                    Naming.lookup("rmi://localhost:2002/ServicioGestor/SER2");
+            return servidor.getUsuarioData(nick);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     // Metodos trinos
     @Override
     public void crearTrino (String trino, String nickUsuario) throws RemoteException{

@@ -7,6 +7,7 @@ import Common.clases.Trino;
 import Common.interfaces.ServicioDatosInterface;
 
 import java.rmi.Naming;
+import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
@@ -18,7 +19,12 @@ public class BaseDeDatos {
         try{
             ServicioDatosImpl servicioDatos = new ServicioDatosImpl();
 
-            LocateRegistry.createRegistry(2001);
+
+            try {
+                LocateRegistry.createRegistry(2001);
+            } catch (RemoteException e) {
+                LocateRegistry.getRegistry(2001);
+            }
 
             ServicioDatosInterface stub = (ServicioDatosInterface)
                     UnicastRemoteObject.exportObject(servicioDatos, 0);

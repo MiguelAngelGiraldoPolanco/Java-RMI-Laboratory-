@@ -135,7 +135,6 @@ public class ServicioDatosImpl extends RemoteObject implements ServicioDatosInte
         List<Trino> resumen = new ArrayList<>();
         for (List<Trino> listaPorUsuario : historialTrinos.values()) {
             for (Trino t : listaPorUsuario) {
-                // Extraemos solo nick y timestamp
                 resumen.add(new Trino(t.GetNickPropietario(), String.valueOf(t.GetTimestamp())));
             }
         }

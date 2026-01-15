@@ -3,6 +3,7 @@ package Cliente;
 import Common.clases.UsuarioData;
 
 import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -10,8 +11,7 @@ import java.util.Set;
 
 public class UsuarioUI{
     private final CallbackUsuarioImpl user;
-    private Set<String> usersOnline = new HashSet<>();
-    private String usuarioActual ;
+    private String usuarioActual = "" ;
 
     public UsuarioUI(CallbackUsuarioImpl user) {
         this.user = user;
@@ -21,15 +21,19 @@ public class UsuarioUI{
         int option;
         do {
             option = Buffer.readInt(
-                    "1. Iniciar sesión\n" +
-                            "2. Registrarse\n"
+                    "1. Registrar un nuevo usuario.\n" +
+                            "2. Hacer login.\n" +
+                            "3. Salir."
             );
 
             switch(option){
-                case 1: iniciarSesion();
+                case 1: registrarse();
                     break;
-                case 2: registrarse();
+                case 2: iniciarSesion();
                     break;
+                case 3:   System.out.println("Cliente detenido.");
+                    UnicastRemoteObject.unexportObject(user, true);
+                    System.exit(0);
                 default: System.out.println("Opción inválida");
             }
         } while(option != 0);
@@ -46,11 +50,11 @@ public class UsuarioUI{
 
     private void iniciarSesion() throws RemoteException {
         String nick = Buffer.readLine("Ingresa tu nick\n");
-        if (!usersOnline.add(nick)){
+        UsuarioData usuario = user.getUser(nick);
+        if ( usuario.isOnline() == true ){
             System.out.println("Ya ha iniciado sesion");
             return;
         }
-        usersOnline.add(nick);
         var trinos = user.ingresar(nick);
         usuarioActual = nick;
         int option = 0;
@@ -61,24 +65,24 @@ public class UsuarioUI{
             }
             do {
                 option = Buffer.readInt(
-                        "1. Crear Trino\n" +
-                                "2. Seguir Usuario\n" +
-                                "3. Dejar De Seguir Usuario\n" +
-                                "4. Trinos De Los Usuarios Que Sigo\n" +
-                                "5. Configuracion de Cuenta\n" +
-                                "6. Cerrar Secion\n"
+                        "1. Informacion del Usuario\n" +
+                                "2. Enviar Trino\n" +
+                                "3.  Listar Usuarios del Sistema.\n" +
+                                "4. Seguir a\n" +
+                                "5. Dejar de seguir a.\n" +
+                                "6. Logout\n"
                 );
 
                 switch(option){
-                    case 1: crearTrino();
+                    case 1: infoUser();
                         break;
-                    case 2: seguirUsuario();
+                    case 2: crearTrino();
                         break;
-                    case 3: dejarSeguirUsuario();
+                    case 3: ListarUsuarios();
                         break;
-                    case 4: trinosUsuariosSeguidos();
+                    case 4: seguirUsuario();
                         break;
-                    case 5: configuracion();
+                    case 5: dejarSeguirUsuario();
                         break;
                     case 6: salir();
                         break;
@@ -90,6 +94,13 @@ public class UsuarioUI{
             System.out.println("Error al iniciar sesión usuario incorrecto");
         }
 
+    }
+    private void infoUser() throws RemoteException {
+        UsuarioData us = user.getUser(usuarioActual);
+        System.out.println("=== INFORMACION DEL USUARIO" + usuarioActual +" ===");
+        System.out.println("Nick: " + us.getNick() +
+                            "\n Nombre: " + us.getNombre() +
+                            "\n Clave: " + us.getClave());
     }
 
     private void crearTrino() throws RemoteException {
@@ -136,41 +147,13 @@ public class UsuarioUI{
         }
     }
 
-    private void trinosUsuariosSeguidos() throws RemoteException {
-        if (usersOnline.contains(usuarioActual)) {
-            user.salir(usuarioActual);
-            usersOnline.remove(usuarioActual);
-            usuarioActual = null;
-            System.out.println("Adios");
-            mostrarMenu();
-        }
-    }
-
-    private void configuracion() throws RemoteException {
-        int option;
-        do {
-            option = Buffer.readInt(
-                    "1. Bloquear Cuenta\n" +
-                            "2. Debloquear Cuenta\n"
-            );
-
-            switch(option){
-                case 1: user.bloquearDesbloquearCuenta(usuarioActual,true);
-                    break;
-                case 2: user.bloquearDesbloquearCuenta(usuarioActual,false);
-                    break;
-                default: System.out.println("Opción inválida");
-            }
-        } while(option != 0);
-    }
-
     private void salir() throws RemoteException {
-        if (usersOnline.contains(usuarioActual)) {
+       // if (usersOnline.contains(usuarioActual)) {
             user.salir(usuarioActual);
-            usersOnline.remove(usuarioActual);
+         //   usersOnline.remove(usuarioActual);
             usuarioActual = null;
             System.out.println("Adios");
-            mostrarMenu();
+           // mostrarMenu();
         }
     }
 }

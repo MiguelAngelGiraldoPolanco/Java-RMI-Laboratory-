@@ -11,9 +11,13 @@ public class Usuario {
     public static void main(String[] args) {
         try{
             CallbackUsuarioImpl user = new CallbackUsuarioImpl();
-            LocateRegistry.createRegistry(2003);
+            try {
+                LocateRegistry.createRegistry(2003);
+            } catch (RemoteException e) {
+                LocateRegistry.getRegistry(2003);
+            }
             UsuarioUI UI = new UsuarioUI(user);
-            UI.mostrarMenu();
+            UI.mostrarMenu(user);
         }catch (Exception e){
             e.printStackTrace();
         }
