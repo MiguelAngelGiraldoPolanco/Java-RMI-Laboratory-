@@ -4,13 +4,31 @@ package Servidor;
 
 import java.rmi.Naming;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import Common.interfaces.*;
 import Common.clases.*;
 
 public class ServicioGestorImpl implements ServicioGestorInterface {
+
+    private Map<String, CallbackUsuarioInterface> mapaCallbacks = new HashMap<>();
+
+    public ServicioGestorImpl() throws RemoteException {
+        super();
+    }
+
+    @Override
+    public void addCallback(String nick, CallbackUsuarioInterface callback) throws RemoteException {
+        this.mapaCallbacks.put(nick, callback);
+        System.out.println(">>> Callback registrado para el usuario: " + nick);
+    }
+
+    @Override
+    public void eliminarCallback(String nick) throws RemoteException {
+        this.mapaCallbacks.remove(nick);
+        System.out.println(">>> Callback eliminado (Logout): " + nick);
+    }
    //Metodos de usuarios
     @Override
     public boolean registrarUsuario(String nombre, String nick, String clave) throws RemoteException{
@@ -61,21 +79,21 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
         }
     }
     @Override
-    public boolean isBLocked(String nick)throws  RemoteException{
+    public boolean isBlocked(String nick)throws  RemoteException{
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
                     Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
             UsuarioData user = baseDatos.getUsuarioData(nick);
-            if (user.isBlocked()){
+            if (user == null) {
                 return false;
-            }else {
-                return true;
             }
+            return user.isBlocked();
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
+
     @Override
     public boolean onLine (String nick, boolean line) throws RemoteException{
         try {
@@ -85,18 +103,6 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
-        }
-    }
-    //Métodos de seguimiento
-    @Override
-    public List<String> getSeguidores(String nickSeguido) throws RemoteException{
-        try {
-            ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
-            return baseDatos.getSeguidores(nickSeguido);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
         }
     }
     @Override
@@ -130,61 +136,46 @@ public class ServicioGestorImpl implements ServicioGestorInterface {
 
     //Métodos de trinos
     @Override
-    public void crearTrino (String trino, String nickUsuario) throws RemoteException{
+    public void crearTrino(String trino, String nickUsuario) throws RemoteException {
         try {
             ServicioDatosInterface baseDatos = (ServicioDatosInterface)
                     Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
+            UsuarioData autor = baseDatos.getUsuarioData(nickUsuario);
+            if (autor == null || autor.isBlocked()) {
+                System.out.println("El usuario " + nickUsuario + " está bloqueado o no existe. Trino rechazado.");
+                return;
+            }
+
+            // CORRECCIÓN: Usar la variable 'trino' que viene por parámetro
+            Trino trinito = new Trino(trino, nickUsuario);
             baseDatos.crearTrino(trino, nickUsuario);
-            Trino trinito = new Trino(trino,nickUsuario);
-            // agregar los trinos nuevos como pendientes si tiene seguidores que estan offline
+
             List<String> seguidores = baseDatos.getSeguidores(nickUsuario);
-            // verificar si los seguidores estan online o offline
-            if (seguidores != null){
-                List<UsuarioData> usuarios = new ArrayList<>();
-                    seguidores.forEach( seguidor ->{
+
+            if (seguidores != null) {
+                for (String nickSeguidor : seguidores) {
+                    if (this.mapaCallbacks.containsKey(nickSeguidor)) {
                         try {
-                            usuarios.add(baseDatos.getUsuarioData(seguidor));
+                            CallbackUsuarioInterface clienteDestino = mapaCallbacks.get(nickSeguidor);
+                            // RECUERDA: El cliente debe tener implementado 'recibirTrino'
+                            clienteDestino.recibirTrino(trinito);
+                            System.out.println("Trino enviado en tiempo real a: " + nickSeguidor);
                         } catch (RemoteException e) {
-                            System.out.println("no se pudo procesar y añadir usuario");
+                            System.out.println("Fallo de conexión con " + nickSeguidor + ". Guardando como pendiente.");
+                            baseDatos.addTrinoPendiente(nickSeguidor, trinito);
+                            this.mapaCallbacks.remove(nickSeguidor);
                         }
-                    });
-                    usuarios.forEach(user ->{
-                        if (user.isOnline() == false){
-                            try {
-                                baseDatos.addTrinoPendiente(user.getNick(),trinito);
-                            } catch (RemoteException e) {
-                                System.out.println("no se pudo procesar y añadir trino");
-                            }
-                        }
-                    });
+                    } else {
+                        baseDatos.addTrinoPendiente(nickSeguidor, trinito);
+                        System.out.println("Trino guardado como pendiente para: " + nickSeguidor);
+                    }
+                }
             }
         } catch (Exception e) {
+            System.err.println("Error en el servidor al crear trino: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-    @Override
-    public List<Trino> getTrinos(String nicksUsuario) throws RemoteException{
-        try {
-            ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
 
-            return baseDatos.getTrinos(nicksUsuario);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-    @Override
-    public boolean borrarTrinoTotal(Trino trino) throws RemoteException{
-        try {
-            ServicioDatosInterface baseDatos = (ServicioDatosInterface)
-                    Naming.lookup("rmi://localhost:2001/BaseDeDatos/BD1");
-
-            return baseDatos.borrarTrinoTotal(trino);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
     }
 }

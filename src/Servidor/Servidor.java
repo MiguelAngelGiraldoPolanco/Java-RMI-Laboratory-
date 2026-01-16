@@ -6,18 +6,15 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
-
-import BaseDeDatos.ServicioDatosImpl;
 import Cliente.Buffer;
-import Common.clases.Trino;
 import Common.clases.UsuarioData;
 import Common.interfaces.*;
 
 public class Servidor {
     public static void main(String[] args) {
         try{
-            ServicioAutenticacionImpl servicioAutenticacion = new  ServicioAutenticacionImpl();
             ServicioGestorImpl servicioGestor = new ServicioGestorImpl();
+            ServicioAutenticacionImpl servicioAutenticacion = new  ServicioAutenticacionImpl(servicioGestor);
 
             try {
                 LocateRegistry.createRegistry(2002);

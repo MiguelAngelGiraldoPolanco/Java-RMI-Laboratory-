@@ -1,5 +1,7 @@
 package Cliente;
 
+// Miguel Angel Giraldo Polanco mgiraldopolanco@gmail.com
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;

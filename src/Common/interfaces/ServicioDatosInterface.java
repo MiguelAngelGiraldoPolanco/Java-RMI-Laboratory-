@@ -3,11 +3,9 @@ package Common.interfaces;
 // Miguel Angel Giraldo Polanco mgiraldopolanco@gmail.com
 
 import Common.clases.*;
-
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
-
 
 public interface ServicioDatosInterface extends Remote {
 
